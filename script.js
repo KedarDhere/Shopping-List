@@ -4,6 +4,13 @@
  const clearBtn = document.getElementById('clear')
  const itemFilter = document.getElementById('filter')
 
+
+ function displayItems() {
+    const  itemsFromStorage = getItemsFromStorage()
+    itemsFromStorage.forEach(item => addItemToDOM(item))
+    checkUI()
+ }
+
  function onAddItemSubmit(e) {
     const newItem = itemInput.value
     e.preventDefault()
@@ -36,13 +43,7 @@
  }
 
  function addItemToStorage(item) {
-    let itemsFromStorage;
-
-    if (localStorage.getItem('items') === null) {
-        itemsFromStorage = []
-    } else {
-        itemsFromStorage = JSON.parse(localStorage.getItem('items'))
-    }
+    let itemsFromStorage = getItemsFromStorage();
 
     // Add new item to the array
     itemsFromStorage.push(item)
@@ -50,6 +51,19 @@
     // Convert and add to the new item to local storage
     localStorage.setItem('items', JSON.stringify(itemsFromStorage))
  }
+
+ function getItemsFromStorage() {
+    let itemsFromStorage
+
+    if (localStorage.getItem("items") === null) {
+        localStorage = []
+    } else {
+        itemsFromStorage = JSON.parse(localStorage.getItem('items'))
+    }
+
+    return itemsFromStorage
+ }
+
  function createButton(classes) {
     const button = document.createElement('button')
     button.className = classes
@@ -107,10 +121,17 @@
 
     })
  }
+
+// Initialization app
+function init() {
  //Event Listeners
  itemForm.addEventListener('submit', onAddItemSubmit )
  itemList.addEventListener('click', removeItem)
  clearBtn.addEventListener('click', clearAll)
  itemFilter.addEventListener('input', filterItems)
-
+ document.addEventListener("DOMContentLoaded", displayItems)
  checkUI()
+}
+
+
+init()
